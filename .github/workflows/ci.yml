@@ -1,0 +1,36 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: "0 8,10,14,16 * * *"
+  workflow_dispatch:
+
+jobs:
+  autogreen:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Set up Git configuration
+        run: |
+          git config --local user.email "1497055242@qq.com"
+          git config --local user.name "Qi_YiJun"
+
+      - name: Make changes
+        run: |
+          echo "Changes made at $(date)" >> changes.txt
+          git add changes.txt
+
+      - name: Commit and push changes
+        run: |
+          git commit -m "update changes.txt"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
